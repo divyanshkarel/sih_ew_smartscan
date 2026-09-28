@@ -69,62 +69,35 @@ Legacy open-loop raster sweeps blindly cycle through frequency channels sequenti
 ├── data_pipeline.py         # PyArrow streaming pipeline for 70GB TSRD
 ├── rf_env.py                # Single-receiver Gymnasium environment
 ├── train_dqn.py             # Stable-Baselines3 single-receiver trainer
-├── evaluate_agents.py       # Comparative evaluator for single-receiver RL vs baseline
 ├── rf_env_dual.py           # Dual-receiver cooperative environment (400 actions)
 ├── train_dual_dqn.py        # Cooperative dual-receiver DQN trainer
-├── evaluate_dual.py         # Comparative evaluator for dual-receiver RL vs baseline
 ├── rf_env_threat.py         # Threat-priority environment (Tiered lethality)
 ├── train_threat_dqn.py      # Transfer learning threat-weighted trainer
 ├── quantize_edge.py         # FP32 to INT8 dynamic quantization & micro-benchmarking
 ├── psr_synchronizer.py      # Phase-locked periodic scan synchronizer
 ├── api_backend.py           # FastAPI service serving INT8 ONNX inference
-├── test_edge_api.py         # Automated test suite for edge inference API
 ├── smart_scan_dashboard/    # Flutter web tactical War Room UI
-├── smart_scan_dqn.zip       # Pre-trained Single-Receiver DQN weights
-├── smart_scan_dual_dqn.zip  # Pre-trained Cooperative Dual-Receiver DQN weights
-├── smart_scan_threat_dqn.zip# Pre-trained Threat-Priority Dual-Receiver DQN weights
-├── smart_scan_edge.onnx     # Single-Receiver FP32 ONNX model
-├── threat_agent_fp32.onnx   # Threat-Priority Dual-Receiver FP32 ONNX model
-├── threat_agent_int8.onnx   # Threat-Priority Dual-Receiver INT8 quantized model
-└── requirements.txt         # Production Python dependencies
+└── models/                  # Exported ONNX graphs and PyTorch weights
 ```
 
 ---
 
-## 5. Quickstart & Evaluation Instructions
+## 5. Execution Guide
 
-### A. Environment Setup
-```powershell
+### 1. Launch FastAPI Edge Backend
+```bash
 python -m venv .venv
-.venv\Scripts\activate
+.\.venv\Scripts\activate
 pip install -r requirements.txt
+python api_backend.py
 ```
+*API serves live inference on http://127.0.0.1:8000 with Swagger docs at `/docs`.*
 
-### B. Execute INT8 Quantization Benchmark (Upgrade 3)
-```powershell
-python quantize_edge.py
+### 2. Launch Flutter War Room UI
+```bash
+cd smart_scan_dashboard
+flutter run -d chrome
+# Or serve pre-compiled release build:
+python -m http.server 8080 --directory build/web
 ```
-*Outputs file size compression (712 KB -> 185 KB) and microsecond inference benchmark (17.28 µs latency).*
-
-### C. Execute Periodic Scan Synchronizer (Upgrade 4)
-```powershell
-python psr_synchronizer.py
-```
-*Validates deterministic $T_{\text{rot}}$ extraction ($1999.89$ steps) and 100.0% post-lock intercept rate.*
-
-### D. Execute Dual-Receiver Cooperative Benchmark (Upgrade 1)
-```powershell
-python evaluate_dual.py
-```
-*Validates 25.34% cooperative $P_d$ and 0.00% hardware collision rate.*
-
-### E. Launch Live Edge API & Tactical War Room UI
-1. **Start FastAPI Backend:**
-   ```powershell
-   uvicorn api_backend:app --port 8000
-   ```
-2. **Launch Flutter War Room Dashboard:**
-   ```powershell
-   cd smart_scan_dashboard
-   flutter run -d chrome
-   ```
+*Navigate to http://localhost:8080 in your browser.*
