@@ -1,0 +1,48 @@
+# Python Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# 70GB Turing Synthetic Radar Dataset & Large Raw Data Files
+dataset/
+*.parquet
+*.h5
+*.hdf5
+*.csv
+*.npy
+
+# Flutter & Dart Build Artifacts
+**/build/
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.pub-cache/
+**/.pub/
+smart_scan_dashboard/build/
+smart_scan_dashboard/.dart_tool/
+smart_scan_dashboard/windows/flutter/ephemeral/
+smart_scan_dashboard/.idea/
+smart_scan_dashboard/*.iml
+
+# Python Bytecode and Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# OS & IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+*.swo
+
+# Explicitly Preserve Trained Models for Evaluation
+!*.onnx
+!*.zip
